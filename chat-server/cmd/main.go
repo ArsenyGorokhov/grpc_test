@@ -2,11 +2,14 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"net"
 	"time"
 
 	desc "github.com/ArsenyGorokhov/grpc_test/chat-server/pkg/chat"
 	"github.com/brianvoe/gofakeit"
+	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -35,5 +38,10 @@ func (s *server) SendMessage(ctx context.Context, req *desc.SendRequest) (*empty
 }
 
 func main() {
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", grpcPort))
+	if err != nil {
+		log.Fatalf("failed to listen: %v", err)
+	}
 
+	s := grpc.NewServer()
 }

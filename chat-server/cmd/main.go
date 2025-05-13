@@ -10,6 +10,7 @@ import (
 	desc "github.com/ArsenyGorokhov/grpc_test/chat-server/pkg/chat"
 	"github.com/brianvoe/gofakeit"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -42,6 +43,14 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-
 	s := grpc.NewServer()
+	reflection.Register(s)
+
+	desc.RegisterChatServer(s, &desc.UnimplementedChatServer{})
+
+	log.Printf("server listening at %v", lis.Addr())
+
+	if err = s.Serve(lis); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
 }

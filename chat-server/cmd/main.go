@@ -28,9 +28,9 @@ func (s *server) Create(ctx context.Context, req *desc.CreateRequest) (*desc.Cre
 	return resp, nil
 }
 
-func (s *server) Delete(ctx context.Context, req *desc.DeleteRequest) error {
+func (s *server) Delete(ctx context.Context, req *desc.DeleteRequest) (*emptypb.Empty, error) {
 	log.Printf("User %v has been deleted", req.Id)
-	return nil
+	return &emptypb.Empty{}, nil
 }
 
 func (s *server) SendMessage(ctx context.Context, req *desc.SendRequest) (*emptypb.Empty, error) {
@@ -46,7 +46,7 @@ func main() {
 	s := grpc.NewServer()
 	reflection.Register(s)
 
-	desc.RegisterChatServer(s, &desc.UnimplementedChatServer{})
+	desc.RegisterChatServer(s, &server{})
 
 	log.Printf("server listening at %v", lis.Addr())
 
